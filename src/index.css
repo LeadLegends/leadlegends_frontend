@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Tailwind v4 theme tokens (define FIRST) */
+@theme {
+  --color-brand-navy: #0B1C33;
+  --color-brand-green: #2F5D48;
+  --color-brand-gold: #C5A666;
+  --color-brand-beige: #F5F5F0;
+
+  --font-sans: Inter, system-ui, sans-serif;
+}
+
+/* Base styles (optional but clean) */
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* Hide scrollbar but keep scrolling */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+}
