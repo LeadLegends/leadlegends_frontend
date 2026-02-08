@@ -60,7 +60,7 @@
 // export default App;
 
 
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -73,15 +73,25 @@ import Contact from "./pages/contact";
 import GenerativeAI from "./pages/GenrativeAI";
 import Pricing from "./pages/Pricing";
 import Solutions from "./pages/Solutions";
+import DashboardLayout from "./layouts/DashboardLayout";
+import Login from "./pages/Login";
 
 
 function App() {
+  // MOCK USER (replace later with auth)
+  const [user,setUser] = useState({
+    name: "Vinod",
+    role: "sales", // change to manager / admin / sales  to test
+  });
+
   return (
     <BrowserRouter>
       {/* <ScrollToAnchor /> */}
 
       <Routes>
-        {/* Layout Route */}
+        {/* Layout route */}
+
+        {/* Main website Route */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
@@ -90,12 +100,31 @@ function App() {
           <Route path="/solutions" element={<Solutions />} />
           <Route
             path="/login"
-            element={
-              <div className="h-[60vh] flex items-center justify-center">
-                Login Page
-              </div>
-            }
+            element={<Login user={user} setUser={setUser} />}
           />
+        </Route>
+
+
+        <Route element={<DashboardLayout user={user} />}>
+        {/* Routes for Admin Dashboard */}
+          <Route path="/dashboard/admin" element={<div className=" flex items-center justify-center">Dashboard</div>} />
+          <Route path="/dashboard/admin/users" element={<div className=" flex items-center justify-center">Users</div>} />
+          <Route path="/dashboard/admin/leads" element={<div className=" flex items-center justify-center">Leads</div>} />
+          <Route path="/dashboard/admin/reports" element={<div className=" flex items-center justify-center">Reports</div>} />
+          <Route path="/dashboard/admin/settings" element={<div className=" flex items-center justify-center">Settings</div>} />
+
+          {/* Routes for Sales Executive Dashboard */}
+          <Route path="/dashboard/sales" element={<div className=" flex items-center justify-center">Dashboard</div>} />
+          <Route path="/dashboard/sales/leads" element={<div className=" flex items-center justify-center"> Leads</div>} />
+          <Route path="/dashboard/sales/followups" element={<div className=" flex items-center justify-center">Follow-ups</div>} />
+          <Route path="/dashboard/sales/performance" element={<div className="h-screen flex items-center justify-center">Performance</div>} />
+
+          {/* Routes for Manager Dashboard */}
+          <Route path="/dashboard/manager" element={<div className=" flex items-center justify-center">Dashboard</div>} />
+          <Route path="/dashboard/manager/assign-leads" element={<div className=" flex items-center justify-center">Assign Leads</div>} />
+          <Route path="/dashboard/manager/team-leads" element={<div className=" flex items-center justify-center">Team Leads</div>} />
+          <Route path="/dashboard/manager/performance" element={<div className=" flex items-center justify-center">Performance</div>} />
+          <Route path="/dashboard/manager/reports" element={<div className=" flex items-center justify-center">Reports</div>} />
         </Route>
       </Routes>
     </BrowserRouter>

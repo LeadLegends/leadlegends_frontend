@@ -45,7 +45,7 @@ const Navbar = () => {
 
         {/* --- RIGHT BUTTONS --- */}
         <div className="hidden md:flex items-center gap-4">
-          <NavLink to="/login" className="text-slate-600 font-semibold text-sm hover:text-blue-600 transition-colors">
+          <NavLink to="/login" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>
             Log In
           </NavLink>
           <NavLink to="/contact" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all shadow-lg shadow-blue-600/20">
