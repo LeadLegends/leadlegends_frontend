@@ -62,19 +62,11 @@
 
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ScrollToAnchor from "./components/ScrollToAnchor";
+
 
 // Layout
 import MainLayout from "./layouts/MainLayout";
 
-// Pages
-import Hero from "./components/landing/Hero";
-import FeatureTabs from "./components/landing/FeatureTabs";
-import HowItWorks from "./components/landing/HowItWorks";
-import Integrations from "./components/landing/Integrations";
-import AgenticAI from "./components/landing/AgenticAI";
-import SocialProof from "./components/landing/SocialProof";
-import Testimonials from "./components/landing/Testimonials";
 
 import Home from "./pages/Home";
 import Contact from "./pages/contact";
@@ -86,7 +78,7 @@ import Solutions from "./pages/Solutions";
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToAnchor />
+      {/* <ScrollToAnchor /> */}
 
       <Routes>
         {/* Layout Route */}
