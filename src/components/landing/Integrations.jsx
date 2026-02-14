@@ -42,8 +42,8 @@ const Integrations = () => {
 
           {/* Central Hub (Leadcore) */}
           <div className="relative z-20">
-            <div className="w-28 h-28 md:w-32 md:h-32 bg-[#0B1C33] rounded-3xl border-2 border-[#C5A666] flex items-center justify-center shadow-[0_0_60px_rgba(197,166,102,0.2)]">
-              <img src={logo} alt="Leadcore" className="w-20 object-contain drop-shadow-lg" />
+            <div className="w-25 h-25 md:w-36 md:h-36 bg-[#0B1C33] rounded-3xl border-2 border-[#C5A666] flex items-center justify-center shadow-[0_0_60px_rgba(197,166,102,0.2)]">
+              <img src="src/assets/ChatGPT Image Feb 14, 2026, 12_33_27 PM.png" alt="Leadcore" className="w-30 object-contain drop-shadow-lg" />
             </div>
             {/* Glowing Pulse behind logo */}
             <div className="absolute -inset-4 bg-[#C5A666]/20 rounded-full blur-xl -z-10 animate-pulse"></div>

@@ -50,7 +50,7 @@ const HowItWorks = () => {
              
              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center relative z-10">
                <div className="text-sm text-gray-400 mb-2">AI Analysis Output (Simulation)</div>
-               <div className="text-6xl font-extrabold text-brand-green leading-none">85%</div>
+               <div className="text-6xl font-extrabold text-brand-blue leading-none">85%</div>
                <div className="text-sm font-bold text-brand-navy mt-2 uppercase tracking-wider">Win Probability</div>
                <div className="mt-4 flex gap-2 justify-center">
                  <div className="h-1.5 w-8 bg-brand-green rounded-full"></div>
