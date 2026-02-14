@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X, Sparkles } from 'lucide-react';
-import logo from '../../assets/logo.jpg'; 
+import { Image } from 'lucide-react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Link Styles
-  const linkStyle = "text-slate-600 font-medium hover:text-blue-600 transition-colors text-sm";
-  const activeLinkStyle = "text-blue-600 font-bold text-sm";
+  const linkStyle = "text-slate-600 font-medium hover:text-brand-blue transition-colors text-sm";
+  const activeLinkStyle = "text-brand-blue font-bold text-sm";
 
   return (
     <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-50">
@@ -16,7 +16,7 @@ const Navbar = () => {
         
         {/* --- LOGO (Clicking this also goes Home) --- */}
         <NavLink to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Leadcore" className="h-10 object-contain" />
+          <img src="src/assets/ChatGPT Image Feb 14, 2026, 12_33_27 PM.png" alt="Leadcore" className="h-25 object-contain" />
         </NavLink>
 
         {/* --- DESKTOP MENU --- */}
@@ -33,7 +33,7 @@ const Navbar = () => {
 
           {/* Highlighted AI Link */}
           <NavLink to="/ai" className="flex items-center gap-1.5 text-blue-700 font-bold bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-all shadow-sm text-xs">
-            <Sparkles size={14} className="text-blue-600 fill-blue-600" /> 
+            <Sparkles size={14} className="text-brand-blue " /> 
             Generative AI
           </NavLink>
 
@@ -66,7 +66,7 @@ const Navbar = () => {
           {/* Mobile Home Link */}
           <NavLink to="/" className="text-slate-600 font-medium p-2" onClick={() => setIsMenuOpen(false)}>Home</NavLink>
           
-          <NavLink to="/ai" className="flex items-center gap-2 text-blue-700 font-bold bg-blue-50 p-3 rounded-lg" onClick={() => setIsMenuOpen(false)}>
+          <NavLink to="/ai" className="flex items-center gap-2 text-brand-blue font-bold bg-blue-50 p-3 rounded-lg" onClick={() => setIsMenuOpen(false)}>
              <Sparkles size={16} /> Generative AI
           </NavLink>
           <NavLink to="/solutions" className="text-slate-600 font-medium p-2" onClick={() => setIsMenuOpen(false)}>Solutions</NavLink>

@@ -2,10 +2,15 @@
 
 /* Tailwind v4 theme tokens (define FIRST) */
 @theme {
-  --color-brand-navy: #0B1C33;
-  --color-brand-green: #2F5D48;
-  --color-brand-gold: #C5A666;
-  --color-brand-beige: #F5F5F0;
+  /* Unified product palette: navy + blues */
+  --color-brand-navy: #020617;
+  /* very dark navy / slate-950 */
+  --color-brand-green: #2563eb;
+  /* primary blue */
+  --color-brand-gold: #38bdf8;
+  /* light blue accent */
+  --color-brand-beige: #eff6ff;
+  /* soft blue-tinted background */
 
   --font-sans: Inter, system-ui, sans-serif;
 }
@@ -29,5 +34,6 @@ html {
 }
 
 html {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }

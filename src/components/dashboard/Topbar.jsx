@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Bell,
   Search,
@@ -20,14 +20,15 @@ import {
 const Topbar = ({ user, onLogout }) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-6 sticky top-0 z-40">
       {/* LEFT */}
       <div className="flex items-center gap-6">
         <h1 className="text-lg font-semibold text-slate-100">
-            {/* {getPageTitle(location.pathname)} */}
-            Dashboard Overview
+          {/* {getPageTitle(location.pathname)} */}
+          Dashboard Overview
         </h1>
 
         {/* Search */}
@@ -67,7 +68,7 @@ const Topbar = ({ user, onLogout }) => {
           <div
             className="
     w-9 h-9 rounded-full
-    bg-gradient-to-br from-indigo-500 to-purple-600
+    bg-gradient-to-br from-blue-500 to-blue-700
     text-white flex items-center justify-center
     font-semibold text-sm
     shadow-md
@@ -95,22 +96,37 @@ const Topbar = ({ user, onLogout }) => {
       group-hover:text-slate-200
       "
             style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
-    
+
           />
         </div>
 
         {/* Dropdown */}
         {open && (
           <div className="absolute right-0 top-14 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 cursor-pointer">
+            <button
+              onClick={() => {
+                setOpen(false);
+                navigate("/dashboard/account");
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 cursor-pointer"
+            >
               <User size={16} /> Profile
             </button>
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 cursor-pointer">
+            <button
+              onClick={() => {
+                setOpen(false);
+                navigate("/dashboard/account");
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 cursor-pointer"
+            >
               <Settings size={16} /> Settings
             </button>
             <div className="h-px bg-slate-800 my-1" />
             <button
-              onClick={onLogout}
+              onClick={() => {
+                setOpen(false);
+                onLogout();
+              }}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-slate-800 cursor-pointer"
             >
               <LogOut size={16} /> Logout

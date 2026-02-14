@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 
@@ -72,31 +72,27 @@ const adminSidebarMenu = [
   { label: "Settings", path: "/dashboard/admin/settings", icon: Settings },
 ];
 
-const handleLogout = () => {
-  console.log("User logged out");
-
-  // Clear stored login info (later)
-
-  //   localStorage.removeItem("token");
-
-  // Redirect to login
-
-  //   window.location.href = "/login";
-};
-
-const DashboardLayout = ({ user}) => {
-//   // MOCK USER (replace later with auth)
-//   const user = {
-//     name: "Vinod",
-//     role: "sales", // change to manager / admin / sales  to test
-//   };
+const DashboardLayout = ({ user, setUser }) => {
+  //   // MOCK USER (replace later with auth)
+  //   const user = {
+  //     name: "Vinod",
+  //     role: "sales", // change to manager / admin / sales  to test
+  //   };
   const sidebarByRole = {
     admin: adminSidebarMenu,
     manager: managerSidebarMenu,
     sales: salesSidebarMenu,
   };
 
-  const menu = sidebarByRole[user.role];
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear mock user and send back to login
+    setUser({ name: "", role: "" });
+    navigate("/login");
+  };
+
+  const menu = sidebarByRole[user.role] || salesSidebarMenu;
   return (
     <div className="h-screen bg-slate-100">
       {/* Fixed Sidebar */}
