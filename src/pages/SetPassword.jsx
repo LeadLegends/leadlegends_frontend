@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { authApi } from "../services/api";
 
 const SetPassword = () => {
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const hasUppercase = /[A-Z]/.test(newPassword);
   const hasNumber = /[0-9]/.test(newPassword);
@@ -22,21 +28,37 @@ const SetPassword = () => {
       ? "bg-amber-500"
       : "bg-emerald-500";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: replace with real submit logic / API
-    if ( !newPassword || !confirmPassword) return;
+    setError("");
+
+    if (!newPassword || !confirmPassword) return;
     if (newPassword !== confirmPassword) {
-      alert("New password and confirm password do not match.");
+      setError("New password and confirm password do not match.");
       return;
     }
-    alert("Password updated (demo only).");
+    if (!token) {
+      setError("Invalid or expired reset link. Please request a new one.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await authApi.resetPassword(token, newPassword);
+      setSuccess(true);
+    } catch (err) {
+      setError(
+        err.data?.message || err.data?.error || err.message || "Failed to reset password. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
-    setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
+    setError("");
   };
 
   return (
@@ -59,22 +81,28 @@ const SetPassword = () => {
             </div>
           </div>
 
+          {success ? (
+            <div className="px-6 sm:px-10 py-10 text-center">
+              <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mb-6">
+                <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">Password updated</h2>
+              <p className="text-slate-600 text-sm mb-6">You can now sign in with your new password.</p>
+              <Link to="/login" className="inline-block px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm font-semibold text-white">
+                Go to login
+              </Link>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="px-6 sm:px-10 py-7 space-y-6">
-            {/* Current password */}
-            {/* <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">
-                Current Password<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter current password"
-              />
-            </div> */}
-
-            {/* New password */}
+            {!token && (
+              <p className="text-amber-600 text-sm">
+                No reset token found. Use the link from your reset email, or{" "}
+                <Link to="/forgot-password" className="underline">request a new one</Link>.
+              </p>
+            )}
+            {error && <p className="text-red-500 text-sm" role="alert">{error}</p>}
             <div className="space-y-1">
               <label className="block text-sm font-medium text-slate-700">
                 New Password<span className="text-red-500">*</span>
@@ -83,7 +111,8 @@ const SetPassword = () => {
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={!token || loading}
+                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-70"
                 placeholder="Create a strong password"
               />
             </div>
@@ -106,7 +135,8 @@ const SetPassword = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={!token || loading}
+                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-70"
                 placeholder="Re-enter new password"
               />
             </div>
@@ -163,12 +193,14 @@ const SetPassword = () => {
               </button>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm font-semibold text-white shadow-md shadow-blue-500/30"
+                disabled={!token || loading}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-sm font-semibold text-white shadow-md shadow-blue-500/30"
               >
-                Apply Changes
+                {loading ? "Updating..." : "Apply Changes"}
               </button>
             </div>
           </form>
+          )}
         </div>
       </div>
     </div>
