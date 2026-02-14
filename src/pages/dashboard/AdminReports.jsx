@@ -5,10 +5,10 @@ const AdminReports = () => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-semibold text-slate-50">
+                    <h1 className="text-2xl font-semibold text-slate-800">
                         Reports &amp; Analytics
                     </h1>
-                    <p className="text-sm text-slate-400 mt-1">
+                    <p className="text-sm text-slate-600 mt-1">
                         Track revenue impact, funnel performance, and team productivity.
                     </p>
                 </div>

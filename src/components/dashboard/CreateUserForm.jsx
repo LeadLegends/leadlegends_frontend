@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usersApi } from "../../services/api";
+
 const CreateUserForm = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -9,19 +11,36 @@ const CreateUserForm = () => {
     phone: "",
     status: "Active",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (field) => (e) => {
     const value =
       e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (error) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: replace with real API integration
-    navigate("/dashboard/admin/users");
-    console.log("Create user payload", form);
-    alert("User created (demo only).");
+    setError("");
+
+    if (!form.name?.trim() || !form.email?.trim()) {
+      setError("Name and email are required.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await usersApi.create(form);
+      navigate("/dashboard/admin/users");
+    } catch (err) {
+      setError(
+        err.data?.message || err.data?.error || err.message || "Failed to create user."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +55,9 @@ const CreateUserForm = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {error && (
+          <p className="text-red-500 text-sm" role="alert">{error}</p>
+        )}
         {/* Name */}
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-1">
@@ -113,16 +135,17 @@ const CreateUserForm = () => {
         <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-1">
           <button
             type="button"
+            onClick={() => navigate("/dashboard/admin/users")}
             className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 bg-white hover:bg-slate-50"
           >
             Cancel
           </button>
           <button
             type="submit"
-            onClick={handleSubmit}
-            className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-sm font-semibold text-white shadow-md shadow-blue-500/30"
+            disabled={loading}
+            className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-sm font-semibold text-white shadow-md shadow-blue-500/30"
           >
-            Save user
+            {loading ? "Saving..." : "Save user"}
           </button>
         </div>
       </form>

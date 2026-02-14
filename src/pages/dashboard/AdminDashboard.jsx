@@ -38,7 +38,7 @@ const AdminDashboard = () => {
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 bg-indigo-600 text-slate-200 hover:bg-slate-800 transition">
+                    <button className="px-4 py-2 rounded-lg text-sm font-medium border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition">
                         Download Report
                     </button>
                     <button className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-500 transition">

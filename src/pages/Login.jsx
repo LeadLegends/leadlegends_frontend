@@ -1,39 +1,51 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authApi } from "../services/api";
 
 const Login = ({ user, setUser }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password) {
       setError("Please fill in both fields");
       return;
     }
 
-    // MOCK login logic
-    if (email === "admin@example.com" && password === "admin123") {
-      // navigate("/dashboard/admin");
-      setUser({ ...user, role: "admin" }); // set user role to admin
-      navigate("/dashboard/admin"); // navigate to admin dashboard
-    } else if (email === "manager@example.com" && password === "manager123") {
-      // navigate("/dashboard/manager");
-      setUser({ ...user, role: "manager" }); // set user role to manager
-      navigate("/dashboard/manager"); // navigate to manager dashboard
-    } else if (email === "sales@example.com" && password === "sales123") {
-      // navigate("/dashboard/sales");
-      setUser({ ...user, role: "sales" }); // set user role to sales
-      navigate("/dashboard/sales"); // navigate to sales dashboard
-    } else {
-      setError("Invalid credentials");
+    setLoading(true);
+    try {
+      const data = await authApi.login(email.trim(), password);
+      const userData = data?.user || {};
+      const role = userData.role || "sales";
+
+      setUser({
+        ...user,
+        ...userData,
+        role: role.toLowerCase(),
+      });
+
+      if (role.toLowerCase() === "admin") {
+        navigate("/dashboard/admin");
+      } else if (role.toLowerCase() === "manager") {
+        navigate("/dashboard/manager");
+      } else {
+        navigate("/dashboard/sales");
+      }
+    } catch (err) {
+      setError(
+        err.data?.message || err.data?.error || err.message || "Invalid credentials"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Clear error when user types
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value);
     if (error) setError("");
@@ -97,7 +109,11 @@ const Login = ({ user, setUser }) => {
             </p>
           </div>
 
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mb-4" role="alert">
+              {error}
+            </p>
+          )}
 
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
             <div className="space-y-1">
@@ -109,7 +125,8 @@ const Login = ({ user, setUser }) => {
                 placeholder="you@company.com"
                 value={email}
                 onChange={handleInputChange(setEmail)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-slate-400 transition"
+                disabled={loading}
+                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-slate-400 transition disabled:opacity-70"
               />
             </div>
 
@@ -121,7 +138,7 @@ const Login = ({ user, setUser }) => {
                 <button
                   type="button"
                   className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                  onClick={() => navigate("/set-password")}
+                  onClick={() => navigate("/forgot-password")}
                 >
                   Forgot password?
                 </button>
@@ -131,24 +148,19 @@ const Login = ({ user, setUser }) => {
                 placeholder="••••••••"
                 value={password}
                 onChange={handleInputChange(setPassword)}
-                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-slate-400 transition"
+                disabled={loading}
+                className="w-full border border-slate-200 rounded-xl px-3 py-3 text-sm bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-slate-400 transition disabled:opacity-70"
               />
             </div>
 
             <button
               type="submit"
-              className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-semibold shadow-md shadow-blue-500/30 transition-transform transform hover:-translate-y-0.5"
+              disabled={loading}
+              className="mt-2 w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-semibold shadow-md shadow-blue-500/30 transition-transform transform hover:-translate-y-0.5"
             >
-              Log in
+              {loading ? "Signing in..." : "Log in"}
             </button>
           </form>
-
-          {/* <p className="text-center text-sm text-slate-500 mt-4">
-          Demo Users: <br />
-          Admin: admin@example.com / admin123 <br />
-          Manager: manager@example.com / manager123 <br />
-          Sales: sales@example.com / sales123
-        </p> */}
         </div>
       </div>
     </div>

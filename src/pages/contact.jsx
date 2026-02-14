@@ -1,7 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { contactApi } from '../services/api';
 
 const Contact = () => {
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    if (error) setError("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!form.email?.trim()) {
+      setError("Email is required.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await contactApi.submit(form);
+      setSuccess(true);
+      setForm({ firstName: "", lastName: "", email: "", phone: "", company: "", message: "" });
+    } catch (err) {
+      setError(
+        err.data?.message || err.data?.error || err.message || "Failed to send. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white">
       <div className="pt-10 pb-20 px-6 max-w-7xl mx-auto w-full">
@@ -62,35 +103,46 @@ const Contact = () => {
               Share a few details and our team will get back to you within 24 hours.
             </p>
 
-            <form className="space-y-6">
-              {/* Name row */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && <p className="text-red-500 text-sm" role="alert">{error}</p>}
+              {success && <p className="text-green-600 text-sm">Thanks! We&apos;ll get back to you within 24 hours.</p>}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-600">
-                    First Name
-                  </label>
-                  <input className="input w-full" placeholder="Enter your first name" />
+                  <label className="block text-sm font-medium text-gray-600">First Name</label>
+                  <input
+                    className="input w-full"
+                    placeholder="Enter your first name"
+                    value={form.firstName}
+                    onChange={handleChange("firstName")}
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-600">
-                    Last Name
-                  </label>
-                  <input className="input w-full" placeholder="Enter your last name" />
+                  <label className="block text-sm font-medium text-gray-600">Last Name</label>
+                  <input
+                    className="input w-full"
+                    placeholder="Enter your last name"
+                    value={form.lastName}
+                    onChange={handleChange("lastName")}
+                  />
                 </div>
               </div>
 
               {/* Contact row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-600">
-                    Work Email
-                  </label>
-                  <input className="input w-full" placeholder="you@company.com" />
+                  <label className="block text-sm font-medium text-gray-600">Work Email</label>
+                  <input
+                    type="email"
+                    className="input w-full"
+                    placeholder="you@company.com"
+                    value={form.email}
+                    onChange={handleChange("email")}
+                    required
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-600">
-                    Phone Number
-                  </label>
+                  <label className="block text-sm font-medium text-gray-600">Phone Number</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-3 flex items-center text-brand-green/80 pointer-events-none">
                       <Phone size={18} />
@@ -98,6 +150,8 @@ const Contact = () => {
                     <input
                       className="input w-full pl-10"
                       placeholder="+91 98765 43210"
+                      value={form.phone}
+                      onChange={handleChange("phone")}
                     />
                   </div>
                 </div>
@@ -108,7 +162,12 @@ const Contact = () => {
                 <label className="block text-sm font-medium text-gray-600">
                   Company Name
                 </label>
-                <input className="input w-full" placeholder="Your company or brand" />
+                <input
+                  className="input w-full"
+                  placeholder="Your company or brand"
+                  value={form.company}
+                  onChange={handleChange("company")}
+                />
               </div>
 
               {/* Message */}
@@ -119,12 +178,18 @@ const Contact = () => {
                 <textarea
                   rows="4"
                   className="input w-full"
+                  value={form.message}
+                  onChange={handleChange("message")}
                   placeholder="Tell us about your goals, current challenges, or what you’re looking to achieve..."
                 />
               </div>
 
-              <button className="w-full bg-brand-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg">
-                Send Request <Send size={18} />
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-brand-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 disabled:opacity-70 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg"
+              >
+                {loading ? "Sending..." : "Send Request"} <Send size={18} />
               </button>
             </form>
           </div>

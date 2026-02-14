@@ -98,7 +98,7 @@ function App() {
   // MOCK USER (replace later with auth)
   const [user, setUser] = useState({
     name: "Vinod",
-    role: "manager", // change to manager / admin / sales  to test
+    role: "admin", // change to manager / admin / sales  to test
   });
 
   return (
