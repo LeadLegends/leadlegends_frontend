@@ -39,10 +39,10 @@ const AdminUsers = () => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-semibold text-slate-50">
+                    <h1 className="text-2xl font-semibold text-slate-800">
                         User Management
                     </h1>
-                    <p className="text-sm text-slate-400 mt-1">
+                    <p className="text-sm text-slate-600 mt-1">
                         Control who has access to LeadCore and what they can do.
                     </p>
                 </div>
